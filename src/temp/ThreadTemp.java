@@ -89,11 +89,12 @@ public class ThreadTemp extends Thread {
                         .sort(ascending("Hora", "_id"));
 
             }
-            System.out.println("\nAll docs");
-            for (Document doc : tempIterDoc) {
+            //System.out.println("\nAll docs");
+            /*for (Document doc : tempIterDoc) {
                 System.out.println(doc);
 
             }
+            */
 
             Pair<HashMap<Integer, TempSensorThread>, HashMap<Integer, List<outlierSample>>> pair = populateSensorThreads(
                     tempIterDoc);
@@ -107,6 +108,7 @@ public class ThreadTemp extends Thread {
 
             // QUANDO EXECUTAR OS COMANDOS SQL ATENCAO QUE ALGUNS SAO INSERT E OUTROS CALL E
             // LIMPA OS
+            /*
             System.out.println("\nInsert Commands");
             for (String a : InsertToSql) {
                 System.out.println(a);
@@ -116,18 +118,18 @@ public class ThreadTemp extends Thread {
             for (String a : CallToSql) {
                 System.out.println(a);
             }
-
+            */
             mainThread.sqlTransaction(() -> {
                 mainThread.mongoTransaction(() -> {
                     putOutlierSamplesInMongo(mazeManageCol, OSListMap, numExp);
-                    System.out.println("\n docSize " + docSize);
+                   // System.out.println("\n docSize " + docSize);
                     if (docSize != 0) {
                         Document lastTempDocument = tempIterDoc.skip(docSize -
                                 1).first();
                         String lastTempString = "{_id:\"" + lastTempDocument.get("_id") +
                                 "\", Hora: \""
                                 + lastTempDocument.get("Hora") + "\"}";
-                        System.out.println(lastTempString);
+                       // System.out.println(lastTempString);
                         mazeManageCol.findOneAndUpdate(Filters.eq("idExp", idExperience),
                                 Updates.set("lastTemp", lastTempString));
                     }
@@ -155,10 +157,10 @@ public class ThreadTemp extends Thread {
         countDownLatch = new CountDownLatch(map.size());
         // tirar depois
         for (Map.Entry<Integer, TempSensorThread> sensorThread : map.entrySet()) {
-            System.out.println("sensor: " + sensorThread.getKey());
+            /*System.out.println("sensor: " + sensorThread.getKey());
             for (Document doc : sensorThread.getValue().IS) {
                 System.out.println(doc);
-            }
+            }*/
             sensorThread.getValue().setCountDownLatch(countDownLatch);
             sensorThread.getValue().start();
         }
@@ -253,7 +255,7 @@ public class ThreadTemp extends Thread {
             try {
                 PreparedStatement ps = conn.prepareStatement(insertCmd);
                 ps.execute();
-                System.out.println("insert executed");
+               // System.out.println("insert executed");
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -263,7 +265,7 @@ public class ThreadTemp extends Thread {
             try {
                 CallableStatement cs = conn.prepareCall(callCmd);
                 cs.execute();
-                System.out.println("call executed");
+               // System.out.println("call executed");
             } catch (SQLException e) {
                 e.printStackTrace();
             }

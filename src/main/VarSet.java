@@ -47,7 +47,8 @@ public class VarSet {
             this.tempo_entre_experiencia = Integer.valueOf(res.getInt("tempo_entre_experiencia"));
             this.segundos_abertura_portas_exterior = Integer.valueOf(res.getInt("segundos_abertura_portas_exterior"));
             this.data_hora_inicio = (Timestamp) res.getTimestamp("data_hora_inicio").clone();
-            this.data_hora_fim = (Timestamp) res.getTimestamp("data_hora_fim").clone();
+            Timestamp temp = res.getTimestamp("data_hora_fim");
+            this.data_hora_fim = temp==null? null: (Timestamp) temp.clone();
             this.temperatura_ideal = new BigDecimal(res.getBigDecimal("temperatura_ideal").toString());
             this.variacao_temperatura = new BigDecimal(res.getBigDecimal("variacao_temperatura").toString());
             this.fator_periodicidade = new BigDecimal(res.getBigDecimal("fator_periodicidade").toString());

@@ -66,7 +66,7 @@ public class TempSensorThread extends Thread {
         populateOS(mazeManageIterDoc);
         
         for (Document ISdoc : IS) {
-            System.out.println("ISDoc " + sensor + ": " + ISdoc);
+            //System.out.println("ISDoc " + sensor + ": " + ISdoc);
             if (OS.size() < 3) {
                 OS.add(new outlierSample(ISdoc));
                 createInsertCmdAndCheckRange(ISdoc);
@@ -131,11 +131,11 @@ public class TempSensorThread extends Thread {
         double upperFence = Q3 + (1.5 * IQR);
         double lowerFence = Q1 - (1.5 * IQR);
         if (leitura < lowerFence || leitura > upperFence) {
-            System.out.println("Vetor de OS quando " + leitura + " foi outlier");
-            for(outlierSample os : OS) {
+           // System.out.println("Vetor de OS quando " + leitura + " foi outlier");
+            /*for(outlierSample os : OS) {
                 System.out.println(os.getTemperatura());
-            }
-            System.out.println("is outlier");
+            }*/
+           // System.out.println("is outlier");
             return true;
             }
         return false;

@@ -9,6 +9,7 @@ import java.util.*;
 import javax.crypto.spec.RC2ParameterSpec;
 import javax.swing.JOptionPane;
 
+import javaop.ThreadJavaOp;
 import org.bson.Document;
 
 
@@ -54,6 +55,7 @@ public class Mainthread {
 
     public Mainthread() {
         globalVars = new VarSet();
+        workers = new ArrayList<>();
 
         try {
             loadSQLServerProperties();
@@ -128,7 +130,7 @@ public class Mainthread {
         getManageCol = db.getCollection(mongo_mazemanage_collection);
         getTempCol = db.getCollection(mongo_mazetemp_collection);
         getLogCol = db.getCollection(mongo_mazelog_collection);
-        getLogCol.insertOne(new Document("teste",2));
+        //getLogCol.insertOne(new Document("teste",2));
     }
 
     // sql_connector_type = "jdbc:mariadb"
@@ -169,17 +171,20 @@ public class Mainthread {
     public void connectDbs() {
         connectMongo();
         connectSQL();
-        // TODO: Lançar as 4 threads
-        //ThreadMov mov = new ThreadMov(getMoveCol, getManageCol, sqlConn, this);
-        //mov.start();
-        //ThreadTemp temp = new ThreadTemp(getTempCol, getManageCol, sqlConn, this);
-        //temp.start();
-        
+
+        ThreadMov tm = new ThreadMov(getMoveCol, getManageCol, sqlConn, this);
+        ThreadTemp tt =new ThreadTemp(getTempCol, getManageCol, sqlConn, this);
+        ThreadLog tl = new ThreadLog(getLogCol,getManageCol,sqlConn,this);
+        ThreadJavaOp tj = new ThreadJavaOp(globalVars,sqlConn,getManageCol,getMoveCol,getTempCol);
+
+        workers.addAll(new ArrayList<Thread>(Arrays.asList(tm,tj,tt,tl)));
+        workers.forEach((t) -> t.start());
+        System.out.println("Threads lançadas");
     }
 
     public void closeConnections() {
-        // TODO: Terminar as 4 threads em [workers]
-        // System.out.println("Threads terminadas");
+        for(Thread t : workers) t.interrupt();
+        System.out.println("Threads terminadas");
         String output = "Connections closed.";
         try {
             if (sqlConn != null) {

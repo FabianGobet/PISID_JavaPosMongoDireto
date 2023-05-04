@@ -36,10 +36,12 @@ public class ThreadMov extends Thread {
         this.mazeManageCol = mazeManageCol;
         this.conn = conn;
         this.mainThread = mainThread;
+        //System.out.println("done");
 
     }
 
     public void run() {
+        //System.out.println("entrou");
         while (true) {
 
             try {
@@ -48,7 +50,7 @@ public class ThreadMov extends Thread {
                 e.printStackTrace();
             }
             getLocalVariables();
-
+            //System.out.println("run 1");
             FindIterable<org.bson.Document> mazeManageIterDoc = mazeManageCol.find(Filters.eq("idExp", idExperience));
             int numExp = mazeManageIterDoc.first().getInteger("numExp");
             FindIterable<org.bson.Document> movIterDoc;
@@ -68,11 +70,14 @@ public class ThreadMov extends Thread {
                         .sort(ascending("Hora", "_id"));
 
             }
+            //System.out.println("run 2");
 
+            /*
             for (org.bson.Document doc : movIterDoc) {
                 System.out.println(doc);
 
             }
+            */
 
             List<String> toSql = createSqlCommandsFromMovementList(movIterDoc);
 
@@ -80,24 +85,27 @@ public class ThreadMov extends Thread {
                 if (!DataHoraFim.toString().isEmpty())
                     toSql.add("call experienciaPopulada(" + idExperience + ")");
 
+            /*
             for (String a : toSql) {
                 System.out.println(a);
             }
-
+            */
+            //System.out.println("run 3");
             mainThread.sqlTransaction(() -> {
                 mainThread.mongoTransaction(() -> {
-                    System.out.println(docSize);
+                    //System.out.println(docSize);
                     if (docSize != 0) {
+                        //System.out.println(docSize);
                         org.bson.Document lastMovDocument = movIterDoc.skip(docSize - 1).first();
                         String lastMoveString = "{_id:\"" + lastMovDocument.get("_id") + "\", Hora: \""
                                 + lastMovDocument.get("Hora") + "\"}";
-                        System.out.println(lastMoveString);
+                        //System.out.println(lastMoveString);
                         mazeManageCol.findOneAndUpdate(Filters.eq("idExp", idExperience),
                                 Updates.set("lastMov", lastMoveString));
                     }
                 });
                 executeSqlCommands(toSql);
-
+                //System.out.println("run 4");
             });
 
         }
@@ -109,8 +117,8 @@ public class ThreadMov extends Thread {
             try {
                 int salaEntrada = Integer.parseInt(doc.get("SalaEntrada").toString());
                 int salaSaida = Integer.parseInt(doc.get("SalaSaida").toString());
-                toSql.add("call introduzirPassagem(" + idExperience + "," + salaEntrada + ","
-                        + salaSaida + ",\"" + doc.get("Hora") + "\")");
+                toSql.add("call introduzirPassagem(" + idExperience + "," + salaSaida + ","
+                        + salaEntrada + ",\"" + doc.get("Hora") + "\")");
             } catch (NumberFormatException e) {
                 toSql.add("call introduzirErroExperiencia(" + idExperience + ",\"" + doc.get("Hora") + "\",\""
                         + "SalaEntrada: " + doc.get("SalaEntrada").toString().replace("\"", "") + ",SalaSaida: "
@@ -122,10 +130,13 @@ public class ThreadMov extends Thread {
     }
 
     public void getLocalVariables() {
+        //System.out.println("getLocalVariables");
         try {
             VarSet varSet = mainThread.globalVars;
-            while (!varSet.isPopulated())
+            while (!varSet.isPopulated()) {
+                //System.out.println("sleepy");
                 Thread.sleep(1000);
+            }
             VarSet.Vars vars = varSet.getVars();
             idExperience = vars.getId_experiencia();
             DataHoraFim = vars.getData_hora_fim();
@@ -143,9 +154,10 @@ public class ThreadMov extends Thread {
     public void executeSqlCommands(List<String> commands) {
         for (String cmd : commands) {
             try {
+                System.out.println(cmd);
                 CallableStatement cs = conn.prepareCall(cmd);
-                cs.execute();
-                System.out.println("executed");
+                System.out.println(cs.execute());
+                //System.out.println("executed");
             } catch (SQLException e) {
                 e.printStackTrace();
             }

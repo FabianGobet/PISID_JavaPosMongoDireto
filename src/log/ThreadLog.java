@@ -28,7 +28,7 @@ public class ThreadLog extends Thread {
     private Mainthread mainThread;
     private long periodicidade = 0;
 
-    public ThreadLog(MongoCollection logCol, MongoCollection mazeManageCol, Connection conn, Mainthread mainthread) {
+    public ThreadLog(MongoCollection logCol, MongoCollection mazeManageCol, Connection conn, Mainthread mainThread) {
         this.logCol = logCol;
         this.mazeManageCol = mazeManageCol;
         this.conn = conn;
@@ -57,24 +57,24 @@ public class ThreadLog extends Thread {
                         Filters.and(Filters.gte("Hora", lastLogObject.get("Hora")), Filters.gt("_id", aux.get("_id"))))
                         .sort(ascending("Hora", "_id"));
             }
-
+            /*
             for (org.bson.Document doc : logIterDoc) {
                 System.out.println(doc);
-            }
+            }*/
 
             List<String> toSql = createSqlCommandsFromLogList(logIterDoc);
-
+            /*
             for (String a : toSql) {
                 System.out.println(a);
             }
-
+            */
             mainThread.sqlTransaction(() -> {
                 mainThread.mongoTransaction(() -> {
                     if (toSql.size() != 0) {
                         org.bson.Document lastLogDocument = logIterDoc.skip(toSql.size() - 1).first();
                         String lastLogString = "{_id:\"" + lastLogDocument.get("_id") + "\", Hora: \""
                                 + lastLogDocument.get("Hora") + "\"}";
-                        System.out.println(lastLogString);
+                        //System.out.println(lastLogString);
                         mazeManageCol.updateOne(Filters.eq("numExp", -1),
                                 Updates.set("lastLog", lastLogString), new UpdateOptions().upsert(true));
                     }
@@ -120,7 +120,7 @@ public class ThreadLog extends Thread {
             try {
                 PreparedStatement ps = conn.prepareStatement(cmd);
                 ps.execute();
-                System.out.println("executed");
+               // System.out.println("executed");
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
