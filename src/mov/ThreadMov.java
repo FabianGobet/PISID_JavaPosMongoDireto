@@ -81,9 +81,7 @@ public class ThreadMov extends Thread {
 
             List<String> toSql = createSqlCommandsFromMovementList(movIterDoc);
 
-            if (DataHoraFim != null)
-                if (!DataHoraFim.toString().isEmpty())
-                    toSql.add("call experienciaPopulada(" + idExperience + ")");
+
 
             /*
             for (String a : toSql) {
@@ -94,6 +92,12 @@ public class ThreadMov extends Thread {
             mainThread.sqlTransaction(() -> {
                 mainThread.mongoTransaction(() -> {
                     //System.out.println(docSize);
+                    if (DataHoraFim != null) {
+                        if (!DataHoraFim.toString().isEmpty()) {
+                            mazeManageCol.findOneAndUpdate(Filters.eq("idExp", idExperience),
+                                    Updates.set("populada", 1));
+                        }
+                    }
                     if (docSize != 0) {
                         //System.out.println(docSize);
                         org.bson.Document lastMovDocument = movIterDoc.skip(docSize - 1).first();
@@ -117,8 +121,8 @@ public class ThreadMov extends Thread {
             try {
                 int salaEntrada = Integer.parseInt(doc.get("SalaEntrada").toString());
                 int salaSaida = Integer.parseInt(doc.get("SalaSaida").toString());
-                toSql.add("call introduzirPassagem(" + idExperience + "," + salaSaida + ","
-                        + salaEntrada + ",\"" + doc.get("Hora") + "\")");
+                toSql.add("call introduzirPassagem(" + idExperience + "," + salaEntrada + ","
+                        + salaSaida + ",\"" + doc.get("Hora") + "\")");
             } catch (NumberFormatException e) {
                 toSql.add("call introduzirErroExperiencia(" + idExperience + ",\"" + doc.get("Hora") + "\",\""
                         + "SalaEntrada: " + doc.get("SalaEntrada").toString().replace("\"", "") + ",SalaSaida: "

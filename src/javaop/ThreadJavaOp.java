@@ -45,15 +45,14 @@ public class ThreadJavaOp extends Thread {
                     MongoCursor<Document> manageEntry = getMazeManageEntry(idExp);
                     int numExp = getCorrectNumExp(vars.getTimestamp("data_hora_inicio"));
                     if (manageEntry.hasNext()) {
+                        Document data = manageEntry.next();
+                        if(data.getInteger("populada")==1 && vars.getInt("populada")==0) {
+                            resetData(data.getInteger("idExp"));
+                            setMazeManageEntry(vars, idExp, numExp);
+                        }
                         globalVars.setVars(vars);
                     } else if (numExp != -1) {
-                        BigDecimal fator_outlier = vars.getBigDecimal("fator_tamanho_outlier_sample");
-                        int segundos_abertura = vars.getInt("segundos_abertura_portas_exterior");
-                        int outlier_sample_size = fator_outlier.multiply(BigDecimal.valueOf(segundos_abertura)).multiply(BigDecimal.valueOf(Mainthread.DADOS_SEGUNDO)).intValue();
-                        Document doc = new Document("idExp", idExp)
-                                .append("numExp", numExp)
-                                .append("outlierSampleSize", outlier_sample_size);
-                        getManageCol.insertOne(doc);
+                        setMazeManageEntry(vars, idExp, numExp);
                         globalVars.setVars(vars);
                     }
                 } else {
@@ -64,6 +63,20 @@ public class ThreadJavaOp extends Thread {
         } catch (Exception e) {
             Main.documentLabel.append("JavaOp thread interrupted" + e);
         }
+    }
+
+    private void setMazeManageEntry(ResultSet vars, int idExp, int numExp) throws SQLException {
+        BigDecimal fator_outlier = vars.getBigDecimal("fator_tamanho_outlier_sample");
+        int segundos_abertura = vars.getInt("segundos_abertura_portas_exterior");
+        int outlier_sample_size = fator_outlier.multiply(BigDecimal.valueOf(segundos_abertura)).multiply(BigDecimal.valueOf(Mainthread.DADOS_SEGUNDO)).intValue();
+        Document doc = new Document("idExp", idExp)
+                .append("numExp", numExp)
+                .append("outlierSampleSize", outlier_sample_size).append("populada",0);
+        getManageCol.insertOne(doc);
+    }
+
+    private void resetData(Integer idExp) {
+        getManageCol.deleteOne(new Document("idExp", new Document("$eq", idExp)));
     }
 
     private MongoCursor<Document> getMazeManageEntry(int idExp) {

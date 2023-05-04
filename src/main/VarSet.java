@@ -56,6 +56,8 @@ public class VarSet {
                     res.getBigDecimal("fator_tamanho_outlier_sample").toString());
         }
 
+
+
         public int getId_experiencia() {
             return id_experiencia;
         }
