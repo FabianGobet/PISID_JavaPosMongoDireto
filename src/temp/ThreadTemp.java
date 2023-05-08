@@ -64,10 +64,8 @@ public class ThreadTemp extends Thread {
                 doRegularWork();
             } catch (InterruptedException ie) {
                 Main.documentLabel.append("ThreadTemp interrupted (code 0), a terminar....\n");
-                Main.documentLabel.append(ie + "\n");
                 break;
-            } catch (MongoTimeoutException | MongoSocketReadException | MongoSocketOpenException | SQLException e) {
-                if(Main.mt.getState().equals(State.TIMED_WAITING)) Main.mt.interrupt();
+            } catch (MongoException | SQLException e) {
                 try {
                     sleep(1000);
                 } catch (InterruptedException ex) {
@@ -85,14 +83,15 @@ public class ThreadTemp extends Thread {
                 sqlConn = Main.mt.getConnectionSql();
                 mazeManageCol.find(new Document("idExp", -1));
                 flag = false;
+                Main.documentLabel.append("ThreadTemp: Ligação estabelecida.\n");
             } catch (SQLException | MongoException e) {
-                Main.documentLabel.append("ThreadLog waiting for connections...");
+                Main.documentLabel.append("ThreadTemp: Sem ligação.\n");
                 sleep(1000);
             }
         }
     }
 
-    private void doRegularWork() throws InterruptedException, MongoTimeoutException, MongoSocketReadException, MongoSocketOpenException, SQLException {
+    private void doRegularWork() throws MongoException, SQLException, InterruptedException{
         if(Main.mt.globalVars.isPopulated()) {
             getLocalVariables();
 
@@ -130,7 +129,7 @@ public class ThreadTemp extends Thread {
             sleep(1000);
     }
 
-    private void closeDeal(int numExp, int docSize, FindIterable<Document> tempIterDoc, HashMap<Integer, List<outlierSample>> OSListMap) throws MongoTimeoutException, MongoSocketReadException, MongoSocketOpenException, SQLException {
+    private void closeDeal(int numExp, int docSize, FindIterable<Document> tempIterDoc, HashMap<Integer, List<outlierSample>> OSListMap) throws MongoException, SQLException {
 
         sqlConn.setAutoCommit(false);
         ClientSession session = Main.mt.getMongoSession();

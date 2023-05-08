@@ -44,8 +44,9 @@ public class ThreadMov extends Thread {
                 sqlConn = Main.mt.getConnectionSql();
                 mazeManageCol.find(new Document("idExp", -1));
                 flag = false;
+                Main.documentLabel.append("ThreadMov: Ligação estabelecida.\n");
             } catch (SQLException | MongoException e) {
-                Main.documentLabel.append("ThreadLog waiting for connections...");
+                Main.documentLabel.append("ThreadMov: Sem ligação.\n");
                 sleep(1000);
             }
         }
@@ -64,10 +65,10 @@ public class ThreadMov extends Thread {
                 doRegularWork();
             } catch (InterruptedException ie) {
                 Main.documentLabel.append("ThreadMov interrupted (code 0), a terminar....\n");
-                Main.documentLabel.append(ie + "\n");
+                //Main.documentLabel.append(ie + "\n");
                 break;
-            } catch (MongoTimeoutException | MongoSocketReadException | MongoSocketOpenException | SQLException e) {
-                if(Main.mt.getState().equals(State.TIMED_WAITING)) Main.mt.interrupt();
+            } catch (MongoException | SQLException e) {
+                Main.documentLabel.append("ThreadMov: Sem ligação.");
                 try {
                     sleep(1000);
                 } catch (InterruptedException ex) {

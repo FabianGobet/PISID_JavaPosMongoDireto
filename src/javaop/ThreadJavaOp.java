@@ -45,7 +45,7 @@ public class ThreadJavaOp extends Thread{
                 getManageCol.find(new Document("idExp", -1));
                 flag = false;
             } catch (SQLException | MongoException e) {
-                Main.documentLabel.append("ThreadJavaOp waiting for connections...");
+                Main.documentLabel.append("ThreadJavaOp waiting for connections...\n");
                 sleep(1000);
             }
         }
@@ -66,8 +66,7 @@ public class ThreadJavaOp extends Thread{
                 Main.documentLabel.append("ThreadJavaOp interrupted (code 0), a terminar....\n");
                 Main.documentLabel.append(ie + "\n");
                 return;
-            } catch (MongoTimeoutException | MongoSocketReadException | MongoSocketOpenException | SQLException e) {
-                if(Main.mt.getState().equals(State.TIMED_WAITING)) Main.mt.interrupt();
+            } catch (MongoException | SQLException e) {
                 try {
                     sleep(1000);
                 } catch (InterruptedException ex) {
@@ -78,7 +77,7 @@ public class ThreadJavaOp extends Thread{
         }
     }
 
-    private void doRegularWork() throws SQLException, InterruptedException, MongoTimeoutException {
+    private void doRegularWork() throws SQLException, InterruptedException, MongoException {
         ResultSet vars = fetchSqlData();
         if (vars.next()) {
             int idExp = vars.getInt("id_experiencia");
@@ -90,21 +89,18 @@ public class ThreadJavaOp extends Thread{
                     resetData(data.getInteger("idExp"));
                     setMazeManageEntry(vars, idExp, numExp);
                 }
-                System.out.println(1);
                 globalVars.setVars(vars);
             } else if (numExp != -1) {
                 setMazeManageEntry(vars, idExp, numExp);
-                System.out.println(1);
                 globalVars.setVars(vars);
             }
         } else {
-            System.out.println(2);
             globalVars.cleanVars();
         }
         sleep(1000);
     }
 
-    private void setMazeManageEntry(ResultSet vars, int idExp, int numExp) throws SQLException {
+    private void setMazeManageEntry(ResultSet vars, int idExp, int numExp) throws SQLException, InterruptedException, MongoException {
         BigDecimal fator_outlier = vars.getBigDecimal("fator_tamanho_outlier_sample");
         int segundos_abertura = vars.getInt("segundos_abertura_portas_exterior");
         int outlier_sample_size = fator_outlier.multiply(BigDecimal.valueOf(segundos_abertura)).multiply(BigDecimal.valueOf(Mainthread.DADOS_SEGUNDO)).intValue();
@@ -114,7 +110,7 @@ public class ThreadJavaOp extends Thread{
         getManageCol.insertOne(doc);
     }
 
-    private void resetData(Integer idExp) {
+    private void resetData(Integer idExp) throws MongoException{
         getManageCol.deleteOne(new Document("idExp", new Document("$eq", idExp)));
     }
 
@@ -127,7 +123,7 @@ public class ThreadJavaOp extends Thread{
         return sqlConn.createStatement().executeQuery(sqlQuery);
     }
 
-    private Set<Integer> getNumsExpAfterTimestamp(Timestamp idExpStartTime) {
+    private Set<Integer> getNumsExpAfterTimestamp(Timestamp idExpStartTime) throws MongoException{
         Set<Integer> ls = new HashSet<>();
         String time = idExpStartTime.toString();
 
@@ -148,7 +144,7 @@ public class ThreadJavaOp extends Thread{
         return ls;
     }
 
-    private boolean isCorrectNumExp(int numExp, Timestamp idExpStartTime) {
+    private boolean isCorrectNumExp(int numExp, Timestamp idExpStartTime) throws MongoException{
         boolean valid = false;
         Document matchStage = new Document("$match",
                 new Document("Hora", new Document("$lte", idExpStartTime.toString())).append("numExp",

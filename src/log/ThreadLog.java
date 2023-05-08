@@ -42,9 +42,10 @@ public class ThreadLog extends Thread {
             try {
                 sqlConn = Main.mt.getConnectionSql();
                 mazeManageCol.find(new Document("idExp", -1));
+                Main.documentLabel.append("ThreadLog: Ligação estabelecida.\n");
                 flag = false;
             } catch (SQLException | MongoException e) {
-                Main.documentLabel.append("ThreadLog waiting for connections...");
+                Main.documentLabel.append("ThreadLog: Sem ligação.");
                 sleep(1000);
             }
         }
@@ -65,7 +66,7 @@ public class ThreadLog extends Thread {
                 Main.documentLabel.append(ie + "\n");
                 return;
             } catch (MongoTimeoutException | MongoSocketReadException | MongoSocketOpenException | SQLException e) {
-                if(Main.mt.getState().equals(State.TIMED_WAITING)) Main.mt.interrupt();
+                Main.documentLabel.append("ThreadLog: Sem ligação.");
                 try {
                     sleep(1000);
                 } catch (InterruptedException ex) {
