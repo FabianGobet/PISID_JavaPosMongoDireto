@@ -148,7 +148,6 @@ public class Mainthread extends Thread {
             Main.documentLabel.append("MariaDB Connected.\n");
     }
 
-    //TODO: alguem tem de sinalizar o começo em caso de down
     public void tryConnect() throws InterruptedException{
         boolean dontGo = true;
         try{
@@ -166,11 +165,12 @@ public class Mainthread extends Thread {
                 connectSQL();
                 connectMongo();
                 mongoClient.getDatabase("admin").runCommand(new Document("ping", 1));
+                dontGo = false;
             } catch (MongoException | SQLException me) {
-                Main.documentLabel.append("Mainthread: Failed to establish connections. Trying again soon...\n");
+                Main.documentLabel.append("Mainthread: Tentiva falhada. P´roxima tentativa em 1 segundo.\n");
                 sleep(1000);
             }
-            dontGo = false;
+
         }
 
 
@@ -209,7 +209,7 @@ public class Mainthread extends Thread {
                 sleep(1000);
                 tryConnect();
             } catch (InterruptedException e) {
-                Main.documentLabel.append("Mainthread: Acordada! Tentar ligar.\n");
+                Main.documentLabel.append("ThreadMainThread: Interrompida, a terminar.\n");
             }
         }
 

@@ -49,7 +49,7 @@ public class ThreadMov extends Thread {
                 flag = false;
                 Main.documentLabel.append("ThreadMov: Ligação Estabelecida.\n");
             } catch (SQLException | MongoException e) {
-                Main.documentLabel.append("ThreadMov waiting for connections...\n");
+                Main.documentLabel.append("ThreadMov: Sem ligação.");
                 sleep(1000);
             }
         }
@@ -80,23 +80,24 @@ public class ThreadMov extends Thread {
         try {
             initConn();
         } catch (InterruptedException e) {
-            Main.documentLabel.append("ThreadMov interrupted (code 0), a terminar....\n");
+            Main.documentLabel.append("ThreadMov: Interrompida, a terminar.\n");
             return;
         }
         while (true) {
             try {
                 doRegularWork();
             } catch (InterruptedException ie) {
-                Main.documentLabel.append("ThreadMov interrupted (code 0), a terminar....\n");
+                Main.documentLabel.append("ThreadMov: Interrompida, a terminar.\n");
                 //Main.documentLabel.append(ie + "\n");
                 break;
             } catch (MongoException | SQLException e) {
                 Main.documentLabel.append("ThreadMov: Sem ligação.");
                 try {
                     sleep(1000);
+                    Main.documentLabel.append("ThreadMov: Ligação perdida. A tentar reconectar.\n");
                     initConn(e);
                 } catch (InterruptedException ex) {
-                    Main.documentLabel.append("ThreadMov interrupted (code 0), a terminar....\n");
+                    Main.documentLabel.append("ThreadMov: Interrompida, a terminar.\n");
                     return;
                 }
             }

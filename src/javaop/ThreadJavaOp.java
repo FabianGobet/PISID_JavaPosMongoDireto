@@ -84,12 +84,12 @@ public class ThreadJavaOp extends Thread{
                 doRegularWork();
             } catch (InterruptedException ie) {
                 Main.documentLabel.append("ThreadJavaOp: Interrompida, a terminar.\n");
-                Main.documentLabel.append(ie + "\n");
                 return;
             } catch (MongoException | SQLException e){
 
                 try {
                     sleep(1000);
+                    Main.documentLabel.append("ThreadJavaOp: Ligação perdida. A tentar reconectar.\n");
                     initConn(e);
                 } catch (InterruptedException ex) {
                     Main.documentLabel.append("ThreadJavaOp: Interrompida, a terminar.\n");

@@ -79,19 +79,19 @@ public class ThreadLog extends Thread {
         try {
             initConn();
         } catch (InterruptedException e) {
-            Main.documentLabel.append("ThreadLog interrupted, a terminar....\n");
+            Main.documentLabel.append("ThreadLog: Interrompida, a terminar.\n");
             return;
         }
         while (true) {
             try {
                 doRegularWork();
             } catch (InterruptedException ie) {
-                Main.documentLabel.append("ThreadLog interrupted, a terminar....\n");
-                Main.documentLabel.append(ie + "\n");
+                Main.documentLabel.append("ThreadLog: Interrompida, a terminar.\n");
                 return;
             } catch (MongoException | SQLException e){
                 try{
                     sleep(1000);
+                    Main.documentLabel.append("ThreadLog: Ligação perdida. A tentar reconectar.\n");
                     initConn(e);
                 } catch (InterruptedException ie){
                     return;

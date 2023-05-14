@@ -56,22 +56,22 @@ public class ThreadTemp extends Thread {
         try {
             initConn();
         } catch (InterruptedException e) {
-            Main.documentLabel.append("ThreadTemp interrupted (code 0), a terminar....\n");
+            Main.documentLabel.append("ThreadTemp: Interrompida, a terminar.\n");
             return;
         }
         while (true) {
             try {
                 doRegularWork();
             } catch (InterruptedException ie) {
-                Main.documentLabel.append("ThreadTemp interrupted (code 0), a terminar....\n");
+                Main.documentLabel.append("ThreadTemp: Interrompida, a terminar.\n");
                 break;
             } catch (MongoException | SQLException e) {
-                Main.documentLabel.append("ThreadTemp: Sem ligação.");
                 try {
                     sleep(1000);
+                    Main.documentLabel.append("ThreadTemp: Ligação perdida. A tentar reconectar.\n");
                     initConn(e);
                 } catch (InterruptedException ex) {
-                    Main.documentLabel.append("ThreadLog interrupted (code 0), a terminar....\n");
+                    Main.documentLabel.append("ThreadTemp: Interrompida, a terminar.\n");
                     return;
                 }
             }
@@ -89,7 +89,7 @@ public class ThreadTemp extends Thread {
                 flag = false;
                 Main.documentLabel.append("ThreadTemp: Ligação Estabelecida.\n");
             } catch (SQLException | MongoException e) {
-                Main.documentLabel.append("ThreadTemp waiting for connections...\n");
+                Main.documentLabel.append("ThreadTemp: Sem ligação.");
                 sleep(1000);
             }
         }

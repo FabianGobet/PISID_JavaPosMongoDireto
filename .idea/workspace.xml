@@ -6,6 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="e55c0ee0-5d3c-43a6-9251-ab0c95f4af8c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/javaop/ThreadJavaOp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/javaop/ThreadJavaOp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/log/ThreadLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/log/ThreadLog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Mainthread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Mainthread.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mov/ThreadMov.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mov/ThreadMov.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/temp/ThreadTemp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/temp/ThreadTemp.java" afterDir="false" />
     </list>
@@ -16,6 +19,19 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="f93ade0f-9d4e-4a66-921b-94287d1af339" />
+        <option name="url" value="https://github.com/FabianGobet/PISID_JavaPosMongoDireto.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -77,6 +93,14 @@
       <option name="presentableId" value="Default" />
       <updated>1683318901571</updated>
     </task>
+    <task id="LOCAL-00001" summary="hwijhds">
+      <created>1684058389929</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1684058389929</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -92,5 +116,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="hwijhds" />
+    <option name="LAST_COMMIT_MESSAGE" value="hwijhds" />
   </component>
 </project>
