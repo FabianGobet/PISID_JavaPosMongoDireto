@@ -37,6 +37,7 @@ public class ThreadMov extends Thread {
 
     }
 
+
     private void initConn() throws InterruptedException {
         boolean flag = true;
         while (flag) {
@@ -44,11 +45,31 @@ public class ThreadMov extends Thread {
                 sqlConn = Main.mt.getConnectionSql();
                 this.mazeManageCol = Main.mt.getManageCol;
                 this.moveCol = Main.mt.getMoveCol;
-                mazeManageCol.find(new Document("idExp", -1));
+                this.mazeManageCol.find(new Document("idExp", -1));
                 flag = false;
-                Main.documentLabel.append("ThreadMov: Ligação estabelecida.\n");
+                Main.documentLabel.append("ThreadMov: Ligação Estabelecida.\n");
             } catch (SQLException | MongoException e) {
-                Main.documentLabel.append("ThreadMov: Sem ligação.\n");
+                Main.documentLabel.append("ThreadMov waiting for connections...\n");
+                sleep(1000);
+            }
+        }
+    }
+
+    private void initConn(Exception e) throws InterruptedException {
+        boolean flag = true;
+        while (flag) {
+            try {
+                if(e instanceof MongoException){
+                    this.mazeManageCol = Main.mt.getManageCol;
+                    this.moveCol = Main.mt.getMoveCol;
+                    this.mazeManageCol.find(new Document("idExp", -1));
+                }
+                else if(e instanceof SQLException) {
+                    sqlConn = Main.mt.getConnectionSql();
+                }
+                flag = false;
+                Main.documentLabel.append("ThreadMov: Ligação Estabelecida.\n");
+            } catch (SQLException | MongoException e2) {
                 sleep(1000);
             }
         }
@@ -59,7 +80,7 @@ public class ThreadMov extends Thread {
         try {
             initConn();
         } catch (InterruptedException e) {
-            Main.documentLabel.append("ThreadLog interrupted (code 0), a terminar....\n");
+            Main.documentLabel.append("ThreadMov interrupted (code 0), a terminar....\n");
             return;
         }
         while (true) {
@@ -73,8 +94,9 @@ public class ThreadMov extends Thread {
                 Main.documentLabel.append("ThreadMov: Sem ligação.");
                 try {
                     sleep(1000);
+                    initConn(e);
                 } catch (InterruptedException ex) {
-                    Main.documentLabel.append("ThreadLog interrupted (code 0), a terminar....\n");
+                    Main.documentLabel.append("ThreadMov interrupted (code 0), a terminar....\n");
                     return;
                 }
             }

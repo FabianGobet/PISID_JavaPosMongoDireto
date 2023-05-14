@@ -69,6 +69,7 @@ public class ThreadTemp extends Thread {
                 Main.documentLabel.append("ThreadTemp: Sem ligação.");
                 try {
                     sleep(1000);
+                    initConn(e);
                 } catch (InterruptedException ex) {
                     Main.documentLabel.append("ThreadLog interrupted (code 0), a terminar....\n");
                     return;
@@ -83,16 +84,39 @@ public class ThreadTemp extends Thread {
             try {
                 sqlConn = Main.mt.getConnectionSql();
                 this.mazeManageCol = Main.mt.getManageCol;
-                this.mazeManageCol = Main.mt.getTempCol;
-                mazeManageCol.find(new Document("idExp", -1));
+                this.tempCol = Main.mt.getTempCol;
+                this.mazeManageCol.find(new Document("idExp", -1));
                 flag = false;
-                Main.documentLabel.append("ThreadTemp: Ligação estabelecida.\n");
+                Main.documentLabel.append("ThreadTemp: Ligação Estabelecida.\n");
             } catch (SQLException | MongoException e) {
-                Main.documentLabel.append("ThreadTemp: Sem ligação.\n");
+                Main.documentLabel.append("ThreadTemp waiting for connections...\n");
                 sleep(1000);
             }
         }
     }
+
+    private void initConn(Exception e) throws InterruptedException {
+        boolean flag = true;
+        while (flag) {
+            try {
+                if(e instanceof MongoException){
+                    this.mazeManageCol = Main.mt.getManageCol;
+                    this.tempCol = Main.mt.getTempCol;
+                    this.mazeManageCol.find(new Document("idExp", -1));
+                }
+                else if(e instanceof SQLException) {
+                    sqlConn = Main.mt.getConnectionSql();
+                }
+                flag = false;
+                Main.documentLabel.append("ThreadJavaOp: Ligação Estabelecida.\n");
+            } catch (SQLException | MongoException e2) {
+                sleep(1000);
+            }
+        }
+    }
+
+
+
 
     private void doRegularWork() throws MongoException, SQLException, InterruptedException{
         if(Main.mt.globalVars.isPopulated()) {

@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e55c0ee0-5d3c-43a6-9251-ab0c95f4af8c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/javaop/ThreadJavaOp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/javaop/ThreadJavaOp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/log/ThreadLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/log/ThreadLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Mainthread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Mainthread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mov/ThreadMov.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mov/ThreadMov.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/temp/ThreadTemp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/temp/ThreadTemp.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,18 +31,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "E:/Documents/MyProjects/school/pisid/PISID_JavaPosMongoDireto",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.3816092"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Documents/MyProjects/school/pisid/PISID_JavaPosMongoDireto&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.3816092&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="main" />
