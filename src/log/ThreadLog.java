@@ -53,34 +53,55 @@ public class ThreadLog extends Thread {
         }
     }
 
+    private void initConn(Exception e) throws InterruptedException {
+        boolean flag = true;
+        while (flag) {
+            try {
+                if(e instanceof MongoException){
+                    this.logCol = Main.mt.getManageCol;
+                    this.mazeManageCol = Main.mt.getManageCol;
+                    mazeManageCol.find(new Document("idExp", -1));
+                }
+                else if(e instanceof SQLException) {
+                    sqlConn = Main.mt.getConnectionSql();
+                }
+                flag = false;
+                Main.documentLabel.append("ThreadLog: Ligação Estabelecida.\n");
+            } catch (SQLException | MongoException e2) {
+                sleep(1000);
+            }
+        }
+    }
+
+
+
     public void run() {
         try {
             initConn();
         } catch (InterruptedException e) {
-            Main.documentLabel.append("ThreadLog interrupted (code 0), a terminar....\n");
+            Main.documentLabel.append("ThreadLog interrupted, a terminar....\n");
             return;
         }
         while (true) {
             try {
                 doRegularWork();
             } catch (InterruptedException ie) {
-                Main.documentLabel.append("ThreadLog interrupted (code 0), a terminar....\n");
+                Main.documentLabel.append("ThreadLog interrupted, a terminar....\n");
                 Main.documentLabel.append(ie + "\n");
                 return;
-            } catch (MongoTimeoutException | MongoSocketReadException | MongoSocketOpenException | SQLException e) {
-                Main.documentLabel.append("ThreadLog: Sem ligação.");
-                try {
+            } catch (MongoException | SQLException e){
+                try{
                     sleep(1000);
-                } catch (InterruptedException ex) {
-                    Main.documentLabel.append("ThreadLog interrupted (code 0), a terminar....\n");
+                    initConn(e);
+                } catch (InterruptedException ie){
                     return;
                 }
             }
+            }
         }
-    }
 
 
-    private void doRegularWork() throws InterruptedException, MongoTimeoutException, MongoSocketReadException, MongoSocketOpenException, SQLException {
+    private void doRegularWork() throws InterruptedException, MongoException, SQLException {
         if(Main.mt.globalVars.isPopulated()) {
             VarSet.Vars vars = Main.mt.globalVars.getVars();
             FindIterable<Document> mazeManageIterDoc = mazeManageCol.find(Filters.eq("numExp", -1));

@@ -198,7 +198,9 @@ public class Mainthread extends Thread {
         ThreadMov tm = new ThreadMov(getMoveCol, getManageCol);
         ThreadTemp tt = new ThreadTemp(getTempCol, getManageCol);
         ThreadLog tl = new ThreadLog(getLogCol, getManageCol);
-        ThreadJavaOp tj = new ThreadJavaOp(globalVars, getManageCol, getMoveCol, getTempCol);
+
+
+        ThreadJavaOp tj = new ThreadJavaOp();
 
         workers.addAll(new ArrayList<>(Arrays.asList(tm, tj, tt, tl)));
         workers.forEach((t) -> t.start());

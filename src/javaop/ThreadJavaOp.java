@@ -28,13 +28,8 @@ public class ThreadJavaOp extends Thread{
 
     private final String sqlQuery = "SELECT * FROM javaop";
 
-    public ThreadJavaOp(VarSet globalvars, MongoCollection<Document> getManageCol,
-                        MongoCollection<Document> getMoveCol,
-                        MongoCollection<Document> getTempCol) {
-        this.globalVars = globalvars;
-        this.getManageCol = getManageCol;
-        this.getMoveCol = getMoveCol;
-        this.getTempCol = getTempCol;
+    public ThreadJavaOp() {
+        this.globalVars = Main.mt.globalVars;
     }
 
     private void initConn() throws InterruptedException {
@@ -42,10 +37,35 @@ public class ThreadJavaOp extends Thread{
         while (flag) {
             try {
                 sqlConn = Main.mt.getConnectionSql();
-                getManageCol.find(new Document("idExp", -1));
+                this.getManageCol = Main.mt.getManageCol;
+                this.getMoveCol = Main.mt.getMoveCol;
+                this.getTempCol = Main.mt.getTempCol;
+                this.getManageCol.find(new Document("idExp", -1));
                 flag = false;
+                Main.documentLabel.append("ThreadJavaOp: Ligação Estabelecida.\n");
             } catch (SQLException | MongoException e) {
                 Main.documentLabel.append("ThreadJavaOp waiting for connections...\n");
+                sleep(1000);
+            }
+        }
+    }
+
+    private void initConn(Exception e) throws InterruptedException {
+        boolean flag = true;
+        while (flag) {
+            try {
+                if(e instanceof MongoException){
+                    this.getManageCol = Main.mt.getManageCol;
+                    this.getMoveCol = Main.mt.getMoveCol;
+                    this.getTempCol = Main.mt.getTempCol;
+                    this.getManageCol.find(new Document("idExp", -1));
+                }
+                else if(e instanceof SQLException) {
+                    sqlConn = Main.mt.getConnectionSql();
+                }
+                flag = false;
+                Main.documentLabel.append("ThreadJavaOp: Ligação Estabelecida.\n");
+            } catch (SQLException | MongoException e2) {
                 sleep(1000);
             }
         }
@@ -56,23 +76,26 @@ public class ThreadJavaOp extends Thread{
         try {
             initConn();
         } catch (InterruptedException e) {
-            Main.documentLabel.append("ThreadJavaOp interrupted (code 0), a terminar....\n");
+            Main.documentLabel.append("ThreadJavaOp: Interrompida, a terminar.\n");
             return;
         }
         while (true) {
             try {
                 doRegularWork();
             } catch (InterruptedException ie) {
-                Main.documentLabel.append("ThreadJavaOp interrupted (code 0), a terminar....\n");
+                Main.documentLabel.append("ThreadJavaOp: Interrompida, a terminar.\n");
                 Main.documentLabel.append(ie + "\n");
                 return;
-            } catch (MongoException | SQLException e) {
+            } catch (MongoException | SQLException e){
+
                 try {
                     sleep(1000);
+                    initConn(e);
                 } catch (InterruptedException ex) {
-                    Main.documentLabel.append("ThreadLog interrupted (code 0), a terminar....\n");
+                    Main.documentLabel.append("ThreadJavaOp: Interrompida, a terminar.\n");
                     return;
                 }
+
             }
         }
     }
