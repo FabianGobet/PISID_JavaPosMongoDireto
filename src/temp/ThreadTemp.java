@@ -46,9 +46,9 @@ public class ThreadTemp extends Thread {
     public List<String> InsertToSql = Collections.synchronizedList(new ArrayList<String>());
     public List<String> CallToSql = Collections.synchronizedList(new ArrayList<String>());
 
-    public ThreadTemp(MongoCollection tempCol, MongoCollection mazeManageCol) {
-        this.tempCol = tempCol;
-        this.mazeManageCol = mazeManageCol;
+    public ThreadTemp() {
+        this.tempCol = Main.mt.getTempCol;
+        this.mazeManageCol = Main.mt.getManageCol;
 
     }
 

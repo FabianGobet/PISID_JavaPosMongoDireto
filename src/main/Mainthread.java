@@ -195,11 +195,9 @@ public class Mainthread extends Thread {
             throw new RuntimeException(e);
         }
 
-        ThreadMov tm = new ThreadMov(getMoveCol, getManageCol);
-        ThreadTemp tt = new ThreadTemp(getTempCol, getManageCol);
-        ThreadLog tl = new ThreadLog(getLogCol, getManageCol);
-
-
+        ThreadMov tm = new ThreadMov();
+        ThreadTemp tt = new ThreadTemp();
+        ThreadLog tl = new ThreadLog();
         ThreadJavaOp tj = new ThreadJavaOp();
 
         workers.addAll(new ArrayList<>(Arrays.asList(tm, tj, tt, tl)));
