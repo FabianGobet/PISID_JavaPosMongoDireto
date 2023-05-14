@@ -41,6 +41,8 @@ public class ThreadLog extends Thread {
         while (flag) {
             try {
                 sqlConn = Main.mt.getConnectionSql();
+                this.logCol = Main.mt.getManageCol;
+                this.mazeManageCol = Main.mt.getManageCol;
                 mazeManageCol.find(new Document("idExp", -1));
                 Main.documentLabel.append("ThreadLog: Ligação estabelecida.\n");
                 flag = false;

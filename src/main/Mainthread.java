@@ -49,10 +49,10 @@ public class Mainthread extends Thread {
     private static String mongo_mazetemp_collection;
     private static String mongo_mazelog_collection;
 
-    private MongoCollection<Document> getMoveCol;
-    private MongoCollection<Document> getManageCol;
-    private MongoCollection<Document> getTempCol;
-    private MongoCollection<Document> getLogCol;
+    public MongoCollection<Document> getMoveCol;
+    public MongoCollection<Document> getManageCol;
+    public MongoCollection<Document> getTempCol;
+    public MongoCollection<Document> getLogCol;
     public MariaDbDataSource dataSource;
 
 
@@ -132,6 +132,7 @@ public class Mainthread extends Thread {
         getLogCol = mongoDatabase.getCollection(mongo_mazelog_collection);
     }
 
+
     // sql_connector_type = "jdbc:mariadb"
     // sql_host = "localhost"
     // sql_db = micelab
@@ -165,9 +166,7 @@ public class Mainthread extends Thread {
                 connectSQL();
                 connectMongo();
                 mongoClient.getDatabase("admin").runCommand(new Document("ping", 1));
-                System.out.println("1");
             } catch (MongoException | SQLException me) {
-                System.out.println("2");
                 Main.documentLabel.append("Mainthread: Failed to establish connections. Trying again soon...\n");
                 sleep(1000);
             }
@@ -207,7 +206,6 @@ public class Mainthread extends Thread {
 
         while (true) {
             try {
-                System.out.println("hello");
                 sleep(1000);
                 tryConnect();
             } catch (InterruptedException e) {

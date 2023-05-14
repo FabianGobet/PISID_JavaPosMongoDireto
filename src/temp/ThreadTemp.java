@@ -66,6 +66,7 @@ public class ThreadTemp extends Thread {
                 Main.documentLabel.append("ThreadTemp interrupted (code 0), a terminar....\n");
                 break;
             } catch (MongoException | SQLException e) {
+                Main.documentLabel.append("ThreadTemp: Sem ligação.");
                 try {
                     sleep(1000);
                 } catch (InterruptedException ex) {
@@ -81,6 +82,8 @@ public class ThreadTemp extends Thread {
         while (flag) {
             try {
                 sqlConn = Main.mt.getConnectionSql();
+                this.mazeManageCol = Main.mt.getManageCol;
+                this.mazeManageCol = Main.mt.getTempCol;
                 mazeManageCol.find(new Document("idExp", -1));
                 flag = false;
                 Main.documentLabel.append("ThreadTemp: Ligação estabelecida.\n");
@@ -122,7 +125,7 @@ public class ThreadTemp extends Thread {
             if (DataHoraFim != null)
                 if (!DataHoraFim.toString().isEmpty())
                     CallToSql.add("call experienciaPopulada(" + idExperience + ")");
-
+            //System.out.println(numExp+" "+docSize+" "+tempIterDoc+" "+OSListMap.toString());
             closeDeal(numExp, docSize, tempIterDoc, OSListMap);
             sleep(periodicidade);
         } else
@@ -130,7 +133,6 @@ public class ThreadTemp extends Thread {
     }
 
     private void closeDeal(int numExp, int docSize, FindIterable<Document> tempIterDoc, HashMap<Integer, List<outlierSample>> OSListMap) throws MongoException, SQLException {
-
         sqlConn.setAutoCommit(false);
         ClientSession session = Main.mt.getMongoSession();
         session.startTransaction();
@@ -162,6 +164,8 @@ public class ThreadTemp extends Thread {
         } catch (Exception e) {
             if (sqlConn != null) sqlConn.rollback();
             if (session != null) session.abortTransaction();
+            CallToSql.clear();
+            InsertToSql.clear();
         } finally {
             if (sqlConn != null) sqlConn.setAutoCommit(true);
             if (session != null) session.close();

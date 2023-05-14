@@ -42,6 +42,8 @@ public class ThreadMov extends Thread {
         while (flag) {
             try {
                 sqlConn = Main.mt.getConnectionSql();
+                this.mazeManageCol = Main.mt.getManageCol;
+                this.moveCol = Main.mt.getMoveCol;
                 mazeManageCol.find(new Document("idExp", -1));
                 flag = false;
                 Main.documentLabel.append("ThreadMov: Ligação estabelecida.\n");
@@ -81,7 +83,7 @@ public class ThreadMov extends Thread {
 
     private void doRegularWork() throws InterruptedException, MongoTimeoutException, MongoSocketReadException, MongoSocketOpenException, SQLException {
         if(Main.mt.globalVars.isPopulated()) {
-            System.out.println(Main.mt.globalVars.isPopulated());
+            //System.out.println(Main.mt.globalVars.isPopulated());
             getLocalVariables();
             FindIterable<Document> mazeManageIterDoc = mazeManageCol.find(Filters.eq("idExp", idExperience));
             int numExp = mazeManageIterDoc.first().getInteger("numExp");
