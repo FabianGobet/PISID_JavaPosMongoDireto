@@ -31,9 +31,9 @@ public class ThreadMov extends Thread {
     private int idExperience;
     private Date DataHoraFim;
 
-    public ThreadMov(MongoCollection moveCol, MongoCollection mazeManageCol) {
-        this.moveCol = moveCol;
-        this.mazeManageCol = mazeManageCol;
+    public ThreadMov() {
+        this.moveCol = Main.mt.getMoveCol;
+        this.mazeManageCol = Main.mt.getManageCol;
 
     }
 

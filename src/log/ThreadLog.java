@@ -30,9 +30,9 @@ public class ThreadLog extends Thread {
     private Mainthread mainThread;
     private long periodicidade = 0;
 
-    public ThreadLog(MongoCollection logCol, MongoCollection mazeManageCol) {
-        this.logCol = logCol;
-        this.mazeManageCol = mazeManageCol;
+    public ThreadLog() {
+        this.logCol = Main.mt.getLogCol;
+        this.mazeManageCol = Main.mt.getManageCol;
     }
 
 
