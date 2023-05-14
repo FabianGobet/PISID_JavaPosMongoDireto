@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e55c0ee0-5d3c-43a6-9251-ab0c95f4af8c" name="Changes" comment="">
+    <list default="true" id="e55c0ee0-5d3c-43a6-9251-ab0c95f4af8c" name="Changes" comment="hwijhds">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/javaop/ThreadJavaOp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/javaop/ThreadJavaOp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/log/ThreadLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/log/ThreadLog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Mainthread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Mainthread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mov/ThreadMov.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mov/ThreadMov.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/temp/ThreadTemp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/temp/ThreadTemp.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 public class Main {
 
     public static JTextArea documentLabel = new JTextArea("");
-    public static Mainthread mt = new Mainthread();
+    public static Mainthread mt;
 
     private static void createWindow() {
         JFrame frame = new JFrame("Data Bridge");
@@ -33,6 +33,8 @@ public class Main {
         frame.setVisible(true);
         b1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
+                if(mt!= null && mt.isAlive()) mt.closeConnections();
+                mt = new Mainthread();
                 mt.start();
             }
         });

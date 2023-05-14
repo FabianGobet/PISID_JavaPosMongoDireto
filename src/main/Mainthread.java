@@ -148,18 +148,21 @@ public class Mainthread extends Thread {
             Main.documentLabel.append("MariaDB Connected.\n");
     }
 
-    public void tryConnect() throws InterruptedException{
-        boolean dontGo = true;
+    public void tryConnect() throws InterruptedException, MongoException, SQLException{
         try{
             if(!(mongoClient==null || sqlConn==null)) {
                 mongoClient.getDatabase("admin").runCommand(new Document("ping", 1));
                 sqlConn.createStatement().executeQuery("SELECT 1");
-                dontGo = false;
             }
-        } catch (MongoException | SQLException e) {
-            Main.documentLabel.append("Mainthread: Ligação em baixo, a tentar reconectar.\n");
+        } catch (MongoException me) {
+            connectMongo();
+        } catch (SQLException se) {
+            connectSQL();
         }
+    }
 
+    private void initConn() throws InterruptedException {
+        boolean dontGo = true;
         while (dontGo) {
             try {
                 connectSQL();
@@ -167,13 +170,10 @@ public class Mainthread extends Thread {
                 mongoClient.getDatabase("admin").runCommand(new Document("ping", 1));
                 dontGo = false;
             } catch (MongoException | SQLException me) {
-                Main.documentLabel.append("Mainthread: Tentiva falhada. P´roxima tentativa em 1 segundo.\n");
+                Main.documentLabel.append("Mainthread: Tentativa falhada. Proxima tentativa em 1 segundo.\n");
                 sleep(1000);
             }
-
         }
-
-
     }
 
     public ClientSession getMongoSession() {
@@ -182,7 +182,6 @@ public class Mainthread extends Thread {
 
 
     public Connection getConnectionSql() throws SQLException, InterruptedException {
-        while (sqlConn!= null && !sqlConn.isValid(10)) dataSource.wait();
         return dataSource.getConnection();
     }
 
@@ -190,7 +189,7 @@ public class Mainthread extends Thread {
     @Override
     public void run() {
         try {
-            tryConnect();
+            initConn();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -209,10 +208,14 @@ public class Mainthread extends Thread {
                 sleep(1000);
                 tryConnect();
             } catch (InterruptedException e) {
+                closeConnections();
                 Main.documentLabel.append("ThreadMainThread: Interrompida, a terminar.\n");
+                return;
+            } catch (MongoException | SQLException de){
+                Main.documentLabel.append("Mainthread: Tentativa falhada. Proxima tentativa em 1 segundo.\n");
+                Main.documentLabel.append("Mainthread: "+ de +"\n");
             }
         }
-
     }
 
     public void closeConnections() {
@@ -233,7 +236,7 @@ public class Mainthread extends Thread {
         }
 
     }
-
+    /*
     private void failedToConnectTo(String db, Exception e) {
         //Main.documentLabel.append("Failed to connect to" + db + ":\n" + e + "\nTrying again in:");
         for (int i = 3; i > 0; i--) {
@@ -247,5 +250,5 @@ public class Mainthread extends Thread {
         }
         //Main.documentLabel.append("\n");
     }
-
+*/
 }
