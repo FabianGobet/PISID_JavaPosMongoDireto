@@ -89,7 +89,7 @@ public class ThreadTemp extends Thread {
                 flag = false;
                 Main.documentLabel.append("ThreadTemp: Ligação Estabelecida.\n");
             } catch (SQLException | MongoException e) {
-                Main.documentLabel.append("ThreadTemp: Sem ligação.");
+                Main.documentLabel.append("ThreadTemp: Sem ligação.\n");
                 sleep(1000);
             }
         }

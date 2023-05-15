@@ -47,7 +47,7 @@ public class ThreadLog extends Thread {
                 Main.documentLabel.append("ThreadLog: Ligação estabelecida.\n");
                 flag = false;
             } catch (SQLException | MongoException e) {
-                Main.documentLabel.append("ThreadLog: Sem ligação.");
+                Main.documentLabel.append("ThreadLog: Sem ligação.\n");
                 sleep(1000);
             }
         }
@@ -56,7 +56,7 @@ public class ThreadLog extends Thread {
     private void initConn(Exception e) throws InterruptedException {
         boolean flag = true;
         while (flag) {
-            System.out.println("---------------------------------ENTROU INITCONN--------------------------------");
+            //System.out.println("---------------------------------ENTROU INITCONN--------------------------------");
             try {
                 if(e instanceof MongoException){
                     this.logCol = Main.mt.getManageCol;
@@ -64,13 +64,13 @@ public class ThreadLog extends Thread {
                     mazeManageCol.find(new Document("idExp", -1));
                 }
                 else if(e instanceof SQLException) {
-                    System.out.println("---------------------------------ENTROU SQL--------------------------------");
+                    //System.out.println("---------------------------------ENTROU SQL--------------------------------");
                     sqlConn = Main.mt.getConnectionSql();
                 }
                 flag = false;
                 Main.documentLabel.append("ThreadLog: Ligação Estabelecida.\n");
             } catch (SQLException | MongoException e2) {
-                System.out.println("---------------------------------NÃO CONSEGUIU--------------------------------");
+                //System.out.println("---------------------------------NÃO CONSEGUIU--------------------------------");
                 sleep(1000);
             }
         }

@@ -49,7 +49,7 @@ public class ThreadMov extends Thread {
                 flag = false;
                 Main.documentLabel.append("ThreadMov: Ligação Estabelecida.\n");
             } catch (SQLException | MongoException e) {
-                Main.documentLabel.append("ThreadMov: Sem ligação.");
+                Main.documentLabel.append("ThreadMov: Sem ligação.\n");
                 sleep(1000);
             }
         }
@@ -91,7 +91,7 @@ public class ThreadMov extends Thread {
                 //Main.documentLabel.append(ie + "\n");
                 break;
             } catch (MongoException | SQLException e) {
-                Main.documentLabel.append("ThreadMov: Sem ligação.");
+                Main.documentLabel.append("ThreadMov: Sem ligação.\n");
                 try {
                     sleep(1000);
                     Main.documentLabel.append("ThreadMov: Ligação perdida. A tentar reconectar.\n");
